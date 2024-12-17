@@ -131,7 +131,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Шапка -->
         <div class="header">
             <div class="tabs">
                 <div class="tab active">
@@ -145,37 +144,64 @@
             </div>
         </div>
 
-        <!-- Контент -->
         <div class="content">
-            <!-- Поле ввода -->
-            <textarea class="input-field" rows="2" placeholder="Запланируйте что-нибудь"></textarea>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="button">Сохранить</button>
+            </form>
 
-            <!-- Кнопки выбора -->
-            <div class="controls">
-                <input type="date"/>
-                <input type="time"/>
-            </div>
-            <button class="button"">Сохранить</button>
-
-            <!-- Список задач -->
-            <div class="task-list">
-                <span style="color: #ccc; font-size: 14px; margin: 5px;">10.12.2024</span>
-                <div class="task">
-                    <div>
-                        <span class="time">16:00</span>
-                        <span>Сходить что-то сделать</span>
-                    </div>
-                    &#10003;
-                </div>
-                <div class="task">
-                    <div>
-                        <span class="time">16:30</span>
-                        <span>Погладить кошку</span>
-                    </div>
-                    &#10003;
+            {% for todo_data in todos_data %}
+                <div class="task-list">
+                    <span style="color: #ccc; font-size: 14px; margin: 5px;">{{ todo_data.planned_date }}</span>
+                    {% for todo in todo_data.todos %}
+                        <div class="task">
+                            <div>
+                                <span class="time">{{ todo.planned_time }}</span>
+                                <span>{{ todo.text }}</span>
+                            </div>
+                            <input type="checkbox" class="todo-checkbox" data-todo-id="{{ todo.id }}" {% if todo.done %} checked {% endif %}>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
+            {% endfor %}
         </div>
     </div>
+
+    <script>
+        document.querySelectorAll('.todo-checkbox').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                const todoId = this.dataset.todoId;
+                const done = this.checked;
+
+                console.log(`Отправка запроса для todo_id: ${todoId}, done: ${done}`);
+
+                fetch('/update-todo-status/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({
+                        todo_id: todoId,
+                        done: done
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        alert('Ошибка обновления состояния задачи');
+                    } else {
+                        console.log('Задача обновлена успешно');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    alert('Ошибка обновления состояния задачи');
+                });
+            });
+        });
+    </script>
 </body>
 </html>

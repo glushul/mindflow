@@ -118,15 +118,25 @@
 
         <!-- Контент -->
         <div class="content">
-            <!-- Поле ввода -->
-            <textarea class="input-field" rows="2" placeholder="Напишите что-нибудь"></textarea>
-            <button class="button">Сохранить</button>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="button">Сохранить</button>
+            </form>
 
-            <!-- Заметка -->
-            <div class="note">
-                <p>Сходить что-то сделать, покушать, в спортзал, сделать веб, погладить кошку, помыть посуду, попить чай</p>
-                <time>11.12.2024 16:50</time>
+            {% if notes %}
+            <div class="notes-list">
+                {% for note in notes %}
+                    <div class="note">
+                        <p>{{ note.text }}</p>
+                        <time>{{ note.creation_date }} {{ note.creation_time }}</time>
+                    </div>
+                {% endfor %}
             </div>
+            {% else %}
+            <p>Вот они {{ notes }}.</p>
+            {% endif %}
+
         </div>
     </div>
 </body>
