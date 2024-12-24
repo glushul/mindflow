@@ -1,16 +1,43 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindFlow</title>
+    <link rel="stylesheet" href="{% static 'app/styles/signup.css' %}">
+    <link type="image/x-icon" rel="shortcut icon" href="{% static 'app/images/MindFlow-icon.ico' %}">
 </head>
 <body>
-    {% load crispy_forms_tags %} {% block content %}
-    <form method="post">
-      {% csrf_token %}{{form|crispy}}
-      <p>Have an account? Login <a href="/login">Here</a>!</p>
-      <button type="submit" class="btn btn-success">Register</button>
-    </form>
-    {% endblock %}
+    <h1 class="main-title"><a href="/">MindFlow</a></h1>
+    <div class="form-container">
+        <h2 class="register-title">Регистрация</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="first_name">Имя:</label>
+                {{ form.first_name }}
+            </div>
+            <div class="input-group">
+                <label for="email">Электронная почта:</label>
+                {{ form.email }}
+            </div>
+            <div class="input-group">
+                <label for="password">Пароль:</label>
+                {{ form.password1 }}
+            </div>
+            <div class="input-group">
+                <label for="password">Подтвердите пароль:</label>
+                {{ form.password2 }}
+            </div>
+            <button class="register-btn" type="submit">Зарегистрироваться</button>
+        </form>
+        <div class="register-login">
+            <p>Уже есть аккаунт?</p>
+            <a href="/login">Войти</a>
+        </div>
+    </div>
+
 </body>
 </html>

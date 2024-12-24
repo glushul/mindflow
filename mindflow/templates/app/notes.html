@@ -1,143 +1,66 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo & Notes</title>
-    <style>
-        /* Общие стили */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        body {
-            background-color: #f8f9fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            width: 500px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        /* Шапка */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 20px;
-            border-bottom: 1px solid #ddd;
-            background-color: #f1f3f5;
-        }
-        .tabs {
-            display: flex;
-        }
-        .tab {
-            padding: 8px 12px;
-            cursor: pointer;
-            border: none;
-            border-radius: 4px 4px 0 0;
-            background-color: #ccc;
-            color: black;
-        }
-        .tab.active {
-            background-color: white;
-            font-weight: bold;
-        }
-        .username {
-            display: flex;
-            align-items: center;
-        }
-        .username span {
-            margin-left: 5px;
-            font-weight: bold;
-        }
-        /* Контент */
-        .content {
-            padding: 20px;
-        }
-        .input-field {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            background-color: #f1f3f5;
-            color: #333;
-        }
-        .button {
-            padding: 8px 12px;
-            border: none;
-            background-color: #154c87;
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .button:hover {
-            background-color: #0c3761;
-        }
-        /* Заметка */
-        .note {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-            position: relative;
-        }
-        .note p {
-            margin-bottom: 5px;
-            color: #333;
-        }
-        .note time {
-            position: absolute;
-            bottom: 5px;
-            right: 10px;
-            font-size: 12px;
-            color: #888;
-        }
-    </style>
+    <title>MindFlow</title>
+    <link rel="stylesheet" href="{% static 'app/styles/notes.css' %}">
+    <link type="image/x-icon" rel="shortcut icon" href="{% static 'app/images/MindFlow-icon.ico' %}">
 </head>
 <body>
-    <div class="container">
-        <!-- Шапка -->
-        <div class="header">
-            <div class="tabs">
-              <div class="tab active"><a href="/todo">Todo</a></div>
-                <div class="tab">Notes</div>
-            </div>
-            <div class="username">
-                <span>&#128100;</span>
-                <span>Глущенко Ульяна</span>
+    <header class="header">
+        <div class="header-wrapper">
+            <div class="header-container">
+                <a href="/" class="logo">
+                    <h1>MindFlow</h1>
+                </a>
+                <nav class="nav">
+                    <a href="/notes" class="nav-link-active">Notes</a>
+                    <a href="/todo" class="nav-link">Todo</a>
+                </nav>
+                <div class="user-info">
+                    <img src="{% static 'app/images/manIcon.svg' %}" alt="User Icon" class="user-icon">
+                    <span class="username">{{ user }}</span>
+                </div>
             </div>
         </div>
+    </header>
 
-        <!-- Контент -->
-        <div class="content">
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="button">Сохранить</button>
-            </form>
-
-            {% if notes %}
-            <div class="notes-list">
-                {% for note in notes %}
-                    <div class="note">
-                        <p>{{ note.text }}</p>
-                        <time>{{ note.creation_date }} {{ note.creation_time }}</time>
+    <main class="main">
+        <div class="main-wrapper">
+            <div class="main-container">
+                <div class="main-title">
+                    <h2>Notes</h2>
+                    <p>Оставьте свои мысли и идеи ниже:</p>
+                </div>
+                <form class="notes-section" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="save-btn">Сохранить</button>
+                </form>
+                <div class="notes-display">
+                    <h3>Ваши заметки:</h3>
+                    {% for note in notes %}
+                    <div class="note" data-note-id="{{ note.id }}">
+                        <div class="note-container">
+                            <p>{{ note.text }}</p>
+                        </div>
+                        <div class="second-note-container">
+                            <button class="delete-btn">Удалить</button>
+                            <span class="note-time">{{ note.creation_date|date:"d.m.Y" }} {{ note.creation_time }}</span>
+                        </div>
                     </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
-            {% else %}
-            <p>Вот они {{ notes }}.</p>
-            {% endif %}
-
         </div>
-    </div>
+    </main>
+
+    <footer class="footer">
+        © 2024 MindFlow. Все права защищены.
+    </footer>
+
+    <script src="{% static 'app/js/notes.js' %}"></script>
 </body>
 </html>

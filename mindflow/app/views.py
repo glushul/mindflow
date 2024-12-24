@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
 from .forms import SignupForm, LoginForm, TodoForm, NotesForm
@@ -14,7 +14,10 @@ from .models import Note, Todo
 
 #Домашняя страница
 def index(request):
-    return render(request, 'app/index.html')
+    if request.user.is_authenticated:
+        return render(request, 'app/index.html', {'authenticated': True})
+    else:
+        return render(request, 'app/index.html', {'authenticated': False})
 
 
 #Страница с заметками
@@ -31,7 +34,7 @@ def notes(request):
 
     #Открытие страницы
     notes = Note.objects.filter(user=request.user).order_by('creation_date', '-creation_time')
-    return render(request, 'app/notes.html', {'notes': notes, 'form': form})
+    return render(request, 'app/notes.html', {'notes': notes, 'form': form, 'user': request.user.first_name})
 
 
 #Страница с задачами
@@ -72,7 +75,7 @@ def todo(request):
     ]
 
     # Открытие страницы
-    return render(request, 'app/todo.html', {'todos_data': todos_data, 'form': form})
+    return render(request, 'app/todo.html', {'todos_data': todos_data, 'form': form, 'user': request.user.first_name})
 
 
 #Страница входа
@@ -137,4 +140,22 @@ def update_todo_status(request):
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
-    return JsonResponse({'success': False, 'error': 'fuckyou Invalid request'}, status=400)
+    return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
+
+
+def delete_note(request, note_id):
+    note = get_object_or_404(Note, id=note_id)
+
+    if request.method == "POST":
+        note.delete()
+        return JsonResponse({"success": True})
+    return JsonResponse({"success": False}, status=400)
+
+
+def delete_todo(request, todo_id):
+    todo = get_object_or_404(Todo, id=todo_id)
+
+    if request.method == "POST":
+        todo.delete()
+        return JsonResponse({"success": True})
+    return JsonResponse({"success": False}, status=400)

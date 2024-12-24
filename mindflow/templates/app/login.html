@@ -1,16 +1,33 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindFlow</title>
+    <link rel="stylesheet" href="{% static 'app/styles/login.css' %}">
+    <link type="image/x-icon" rel="shortcut icon" href="{% static 'app/images/MindFlow-icon.ico' %}">
 </head>
 <body>
-  {% load crispy_forms_tags %} {% block content %}
-  <form method="post">
-    {% csrf_token %}{{form|crispy}}
-    <p>Don't have an account? Create one <a href="/signup">Here</a>!</p>
-    <button type="submit" class="btn btn-success">Login</button>
-  </form>
-  {% endblock %}
+    <h1 class="main-title"><a href="/">MindFlow</a></h1>
+    <div class="form-container">
+        <h2 class="login-title">Вход</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="username">Email:</label>
+                {{ form.username }}
+            </div>
+            <div class="input-group">
+                <label for="password">Пароль:</label>
+                {{ form.password }}
+            </div>
+            <button class="login-btn" type="submit">Войти</button>
+        </form>
+        <div class="login-register">
+            <p>Нет аккаунта?</p>
+            <a href="/signup">Зарегистрироваться</a>
+        </div>
+    </div>
 </body>
 </html>

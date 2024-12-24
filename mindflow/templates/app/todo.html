@@ -1,207 +1,78 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Планировщик задач</title>
-    <style>
-        /* Общие стили */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        body {
-            background-color: #f8f9fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            width: 600px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        /* Шапка */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 20px;
-            border-bottom: 1px solid #ddd;
-            background-color: #f1f3f5;
-        }
-        .tabs {
-            display: flex;
-        }
-        .tab {
-            padding: 8px 12px;
-            cursor: pointer;
-            border: none;
-            border-radius: 4px 4px 0 0;
-            background-color: #ccc;
-            color: black;
-        }
-        .tab.active {
-            background-color: white;
-            font-weight: bold;
-        }
-        .username {
-            display: flex;
-            align-items: center;
-        }
-        .username span {
-            margin-left: 5px;
-            font-weight: bold;
-        }
-        /* Контент */
-        .content {
-            padding: 20px;
-        }
-        .input-field {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            background-color: #f1f3f5;
-            color: #333;
-        }
-        .button {
-            padding: 8px 12px;
-            border: none;
-            background-color: #154c87;
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .button:hover {
-            background-color: #0c3761;
-        }
-        /* Выбор даты и времени */
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .controls button {
-            background-color: #d3d3d3;
-            border: none;
-            padding: 8px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .controls button:hover {
-            background-color: #bbb;
-        }
-        /* Список задач */
-        .task-list {
-            border: 1px solid #ddd;
-            padding: 10px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-        }
-        .task {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #ccc;
-            padding: 5px 0;
-        }
-        .task:last-child {
-            border-bottom: none;
-        }
-        .task span {
-            margin-left: 10px;
-        }
-        .time {
-            font-weight: bold;
-        }
-        /* Пустой блок */
-        .empty {
-            height: 150px;
-            border: 2px solid #007bff;
-            border-radius: 4px;
-            background-color: #e9ecef;
-        }
-    </style>
+    <title>MindFlow</title>
+    <link rel="stylesheet" href="{% static 'app/styles/todo.css' %}">
+    <link type="image/x-icon" rel="shortcut icon" href="{% static 'app/images/MindFlow-icon.ico' %}">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="tabs">
-                <div class="tab active">
-                    Todo
+    <header class="header">
+        <div class="header-wrapper">
+            <div class="header-container">
+                <div class="logo">
+                    <a href="/"><h1>MindFlow</h1></a>
                 </div>
-                <div class="tab"><a href="/notes">Notes</a></div>
-            </div>
-            <div class="username">
-                <span>&#128100;</span>
-                <span>Глущенко Ульяна</span>
+                <nav class="nav">
+                    <a href="/notes" class="nav-link">Notes</a>
+                    <a href="/todo" class="nav-link active">Todo</a>
+                </nav>
+                <div class="user-info">
+                    <img src="{% static 'app/images/manIcon.svg' %}" alt="User Icon" class="user-icon">
+                    <span class="username">{{ user }}</span>
+                </div>
             </div>
         </div>
+    </header>
 
-        <div class="content">
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="button">Сохранить</button>
-            </form>
+    <main class="main">
+        <div class="main-wrapper">
+            <div class="main-container">
+                <div class="main-title">
+                    <h2>Todo</h2>
+                    <p>Запланируйте что-нибудь:</p>
+                </div>
+                <form class="todo-section" method="post">
+                    {% csrf_token %}
+                    {{ form.text }}
 
-            {% for todo_data in todos_data %}
-                <div class="task-list">
-                    <span style="color: #ccc; font-size: 14px; margin: 5px;">{{ todo_data.planned_date }}</span>
-                    {% for todo in todo_data.todos %}
-                        <div class="task">
-                            <div>
-                                <span class="time">{{ todo.planned_time }}</span>
-                                <span>{{ todo.text }}</span>
-                            </div>
-                            <input type="checkbox" class="todo-checkbox" data-todo-id="{{ todo.id }}" {% if todo.done %} checked {% endif %}>
+                    <div class="buttons">
+                        <div>
+                            {{ form.planned_date }}
+                            {{ form.planned_time }}
                         </div>
+                        <button class="save-btn" type="submit">Сохранить</button>
+                    </div>
+                </form>
+                <div class="todo-display">
+                    <h3>Ваши планы:</h3>
+                    {% for todo_data in todos_data %}
+                    <div class="todo-date">
+                        <div class="today">
+                            <p class="todo-date-text">{{ todo_data.planned_date }}</p>
+                            {% for todo in todo_data.todos %}
+                            <div class="todo-today" data-todo-id="{{ todo.id }}">
+                                <label class="todo-label">
+                                    <input type="checkbox" class="todo-checkbox" data-todo-id="{{ todo.id }}">
+                                    <span>{{ todo.text }}</span>
+                                </label>
+                                <button class="delete-btn">Удалить</button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                     {% endfor %}
                 </div>
             </div>
-            {% endfor %}
         </div>
-    </div>
+    </main>
 
-    <script>
-        document.querySelectorAll('.todo-checkbox').forEach(function(checkbox) {
-            checkbox.addEventListener('change', function() {
-                const todoId = this.dataset.todoId;
-                const done = this.checked;
+    <footer class="footer">
+        © 2024 MindFlow. Все права защищены.
+    </footer>
 
-                console.log(`Отправка запроса для todo_id: ${todoId}, done: ${done}`);
-
-                fetch('/update-todo-status/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                    },
-                    body: JSON.stringify({
-                        todo_id: todoId,
-                        done: done
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.success) {
-                        alert('Ошибка обновления состояния задачи');
-                    } else {
-                        console.log('Задача обновлена успешно');
-                    }
-                })
-                .catch(error => {
-                    console.error('Ошибка:', error);
-                    alert('Ошибка обновления состояния задачи');
-                });
-            });
-        });
-    </script>
+    <script src="{% static 'app/js/todo.js' %}"></script>
 </body>
 </html>

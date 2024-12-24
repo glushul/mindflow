@@ -7,6 +7,7 @@ from django.utils import timezone
 from .models import Todo, Note
 
 
+#Форма входа
 class SignupForm(UserCreationForm):
     first_name = forms.CharField(required=True, label="First Name")
     email = forms.EmailField(required=True)
@@ -24,19 +25,44 @@ class SignupForm(UserCreationForm):
             user.save()
         return user
 
+
+#Форма регистрации
 class LoginForm(AuthenticationForm):
     username = forms.EmailField(label="Email", widget=forms.EmailInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Enter your email'
+        'class': 'form-control'
     }))
 
+
+#Форма добавления задач
 class TodoForm(forms.ModelForm):
-    planned_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    planned_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
 
     class Meta:
         model = Todo
         fields = ['text', 'planned_date', 'planned_time']
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'class': 'todo-input',
+                'rows': 4,
+                'cols': 50,
+                'placeholder': 'Запланируйте что-нибудь...',
+                'id': 'autoResizeTextarea',
+            }),
+            'planned_date': forms.DateInput(attrs={
+                'class': 'data-btn',
+                'placeholder': 'Выберите дату',
+                'type': 'date',
+            }),
+            'planned_time': forms.TimeInput(attrs={
+                'class': 'data-btn',
+                'placeholder': 'Выберите время',
+                'type': 'time',
+            }, format='%H:%M'),
+        }
+        labels = {
+            'planned_date': '',
+            'planned_time': '',
+            'text': '',
+        }
 
     def clean_planned_date(self):
         planned_date = self.cleaned_data.get('planned_date')
@@ -71,8 +97,21 @@ class TodoForm(forms.ModelForm):
         return planned_time
 
 
+#Форма добавления заметок
 class NotesForm(forms.ModelForm):
 
     class Meta:
         model = Note
         fields = ['text']
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'class': 'note-input',
+                'rows': 4,
+                'cols': 50,
+                'placeholder': 'Напишите что-нибудь...',
+                'id': 'autoResizeTextarea',
+            }),
+        }
+        labels = {
+            'text': '',
+        }

@@ -1,0 +1,178 @@
+@font-face {
+    font-family: "EncodeSansSC";
+    src: url({% static 'app/fonts/EncodeSansSC-Light.woff2'%})  format("woff2");
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: "EncodeSansSC";
+    src: url({% static 'app/fonts/EncodeSansSC-Regular.woff2'%}) format("woff2");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "EncodeSansSC";
+    src: url({% static 'app/fonts/EncodeSansSC-SemiBold.woff2'%}) format("woff2")';
+    font-weight: 600;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    font-size: 62.5%; /* 1rem = 10px */
+    --main-font-family: "EncodeSansSC";
+    --main-text-color: #000000;
+    --second-text-color: #FFFFFF;
+    --first-color: #A4C3B2;
+    --second-color: #6B9080;
+    --third-color: #CCE3DE;
+    --fourth-color: #EAF4F4;
+    --fifth-color: #F6FFF8;
+    --gradient-bg: linear-gradient(135deg, #EAF4F4, #CCE3DE, #A4C3B2);
+    --gradient-btn: linear-gradient(90deg, #6B9080, #A4C3B2);
+    --gradient-hover: linear-gradient(90deg, #F6FFF8, #6B9080);
+}
+
+body {
+    font-family: var(--main-font-family), sans-serif;
+    line-height: 1.6;
+    color: var(--main-text-color);
+    background: var(--gradient-bg);
+    background-attachment: fixed;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-title {
+    margin: 20px 0px;
+    font-size: 4rem;
+    transition: all 0.3s ease;
+}
+
+.main-title a {
+    text-decoration: none;
+    color: var(--main-text-color);
+}
+
+.main-title:hover {
+    transform: scale(1.05);
+}
+
+.form-container {
+    background-color: var(--fourth-color);
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.register-title {
+    font-size: 2.4rem;
+    color: var(--main-text-color);
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-size: 1.6rem;
+    color: var(--main-text-color);
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.6rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.register-btn {
+    background: var(--second-color);
+    color: var(--second-text-color);
+    font-size: 1.8rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.register-btn:hover {
+    transform: scale(1.05);
+}
+
+.register-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.register-login p {
+    font-size: 1.2rem;
+}
+
+.register-login a {
+    color: var(--second-color);
+    text-decoration: none;
+    font-size: 1.6rem;
+}
+
+.register-login a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    :root {
+        font-size: 50%; /* Уменьшаем размер шрифта для мобильных устройств */
+    }
+
+    .form-container {
+        padding: 20px;
+        max-width: 90%;
+    }
+
+    .register-title {
+        font-size: 2rem;
+    }
+
+    .input-group {
+        margin-bottom: 10px;
+    }
+
+    label {
+        font-size: 1.4rem;
+    }
+
+    input {
+        font-size: 1.4rem;
+    }
+
+    button {
+        font-size: 1.6rem;
+        padding: 8px 16px;
+    }
+
+    .register-login p {
+        font-size: 1rem;
+    }
+
+    .register-login a {
+        font-size: 1.4rem;
+    }
+}
