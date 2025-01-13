@@ -143,6 +143,7 @@ def update_todo_status(request):
     return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
 
 
+#Удаление заметки
 def delete_note(request, note_id):
     note = get_object_or_404(Note, id=note_id)
 
@@ -152,6 +153,7 @@ def delete_note(request, note_id):
     return JsonResponse({"success": False}, status=400)
 
 
+#Удаление задачи
 def delete_todo(request, todo_id):
     todo = get_object_or_404(Todo, id=todo_id)
 
